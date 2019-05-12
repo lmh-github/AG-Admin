@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.github.wxiaoqi.security.things.mapper.ConcentAlarmMapper">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.github.wxiaoqi.security.things.entity.ConcentAlarm" id="concentAlarmMap">
+        <result property="alarmId" column="alarm_id"/>
+        <result property="dtuId" column="dtu_id"/>
+        <result property="alarmType" column="alarm_type"/>
+        <result property="alarmContent" column="alarm_content"/>
+        <result property="alarmTime" column="alarm_time"/>
+        <result property="createTime" column="create_time"/>
+        <result property="descn" column="descn"/>
+        <result property="fixType" column="fix_type"/>
+        <result property="fixTime" column="fix_time"/>
+        <result property="fixDescn" column="fix_descn"/>
+        <result property="fixUserId" column="fix_user_id"/>
+        <result property="fixUserName" column="fix_user_name"/>
+        <result property="smsCount" column="sms_count"/>
+        <result property="sms" column="sms"/>
+        <result property="smsPhone" column="sms_phone"/>
+        <result property="email" column="email"/>
+        <result property="emailAddress" column="email_address"/>
+        <result property="alarmPacket" column="alarm_packet"/>
+        <result property="status" column="status"/>
+    </resultMap>
+
+    <resultMap type="com.github.wxiaoqi.security.things.vo.TotilWashYearMonthVo" id="totilWashYearMonthVoMap">
+        <result property="gatherTime" column="gatherTime"/>
+        <result property="totalNum" column="totalNum"/>
+    </resultMap>
+
+    <!-- 故障分析报表,查询当年每月数据 -->
+    <select id="getAlarmYearMonth" resultMap="totilWashYearMonthVoMap" parameterType="java.lang.String">
+        SELECT
+        DATE_FORMAT(alarm_time, '%Y-%m') AS gatherTime,
+        COUNT(0) AS totalNum
+        FROM
+        concent_alarm
+        WHERE 1=1
+        <if test="_parameter != null">
+            AND DATE_FORMAT(alarm_time, '%Y') = #{date}
+        </if>
+        GROUP BY gatherTime
+        ORDER BY gatherTime ASC
+    </select>
+
+</mapper>
